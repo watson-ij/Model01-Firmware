@@ -383,10 +383,10 @@ void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_cou
   switch (tap_dance_index) {
   case 0:
     return tapDanceActionKeys(tap_count, tap_dance_action,
-			      Key_KeypadLeftParen, Key_LeftCurlyBracket, Key_LeftBracket);
+			      Key_LeftParen, Key_LeftCurlyBracket, Key_LeftBracket);
   case 1:
     return tapDanceActionKeys(tap_count, tap_dance_action,
-			      Key_KeypadRightParen, Key_RightCurlyBracket, Key_RightBracket);
+			      Key_RightParen, Key_RightCurlyBracket, Key_RightBracket);
   }
 }
 
