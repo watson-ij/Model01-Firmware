@@ -73,6 +73,8 @@
 
 #include "Kaleidoscope-OneShot.h"
 
+#include "Kaleidoscope-TapDance.h"
+
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
@@ -220,8 +222,8 @@ KEYMAPS(
 
   [FUNCTION2] =  KEYMAP_STACKED
   (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
-   Key_Tab,  ___,              Key_mouseUp, ___,        Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_Home, Key_mouseL,       Key_mouseDn, Key_mouseR, Key_mouseBtnL, Key_mouseWarpNW,
+   Key_Tab,  Key_mouseL,       Key_mouseUp, Key_mouseR, Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
+   Key_Home, Key_mouseBtnL,    Key_mouseDn, TD(0),      TD(1),         Key_mouseWarpNW,
    Key_End,  Key_PrintScreen,  Key_Insert,  ___,        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
    ___, Key_Delete, ___, ___,
    ___,
@@ -376,6 +378,19 @@ static void toggleKeyboardProtocol(uint8_t combo_index) {
   USBQuirks.toggleKeyboardProtocol();
 }
 
+void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+		    kaleidoscope::TapDance::ActionType tap_dance_action) {
+  switch (tap_dance_index) {
+  case 0:
+    return tapDanceActionKeys(tap_count, tap_dance_action,
+			      Key_KeypadLeftParen, Key_LeftCurlyBracket, Key_LeftBracket);
+  case 1:
+    return tapDanceActionKeys(tap_count, tap_dance_action,
+			      Key_KeypadRightParen, Key_RightCurlyBracket, Key_RightBracket);
+  }
+}
+
+
 /** Magic combo list, a list of key combo and action pairs the firmware should
  * recognise.
  */
@@ -479,7 +494,10 @@ KALEIDOSCOPE_INIT_PLUGINS(
   USBQuirks,
 
   // one shot modifiers
-  OneShot
+  OneShot,
+
+  // tap dance keys
+  TapDance
 );
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
