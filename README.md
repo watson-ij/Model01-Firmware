@@ -1,3 +1,13 @@
+# Ian's version of the Firmware
+
+Requires
+- https://github.com/jamesnvc/Kaleidoscope-PrefixLayer.git
+
+Interesting for emacs integration:
+- https://github.com/algernon/kaleidoscope.el.git
+
+The regular keyboardio README continues below...
+
 # Keyboardio Model 01 Firmware
 
 _The default firmware for the Keyboardio Model 01_

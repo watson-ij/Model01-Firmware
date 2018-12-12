@@ -78,6 +78,9 @@
 // QuKeys for doing a different action on key being held
 #include "Kaleidoscope-Qukeys.h"
 
+// Prefix layer, all keys in the layer have some prefix sequence prepended
+#include "Kaleidoscope-PrefixLayer.h"
+
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
@@ -151,7 +154,7 @@ enum { MACRO_VERSION_INFO,
   *
   */
 
-enum { PRIMARY, NUMPAD, FUNCTION1, FUNCTION2 }; // layers
+enum { PRIMARY, NUMPAD, FUNCTION1, FUNCTION2, DELETION }; // layers
 
 
 /**
@@ -186,7 +189,7 @@ KEYMAPS(
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_Tab,   Key_A, Key_S, Key_D, Key_F, Key_G,
    M(MACRO_CC), Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   OSM(LeftShift), Key_Backspace, OSM(LeftControl), OSM(LeftGui),
+   OSM(LeftShift), LT(DELETION, Backspace), OSM(LeftControl), OSM(LeftGui),
    M(MACRO_CX),
 
    M(MACRO_CU),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
@@ -210,7 +213,7 @@ KEYMAPS(
    ___,                    ___, Key_Keypad0, Key_KeypadDot, Key_KeypadMultiply, Key_KeypadDivide,   Key_Enter,
    ___, ___, ___, ___,
    ___),
-
+  
   [FUNCTION1] =  KEYMAP_STACKED
   (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
    Key_Tab,  ___,              Key_mouseUp, ___,        Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
@@ -236,9 +239,24 @@ KEYMAPS(
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
    Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
-                               Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  M(MACRO_ACE),     ___,
-   ___,                        M(MACRO_BOL),           Key_PageDown,             Key_PageUp,               M(MACRO_EOL),    Key_Backslash,    Key_Pipe,
+                               M(MACRO_ACE),           Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,      ___,
+   ___,                        Key_Backslash,          M(MACRO_BOL),             Key_PageDown,             Key_PageUp,      M(MACRO_EOL),    Key_Pipe,
    ___, ___, Key_Enter, ___,
+   ___),
+
+  [DELETION] =  KEYMAP_STACKED
+  (___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___,
+   ___,
+
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___,
    ___)
 ) // KEYMAPS(
 
@@ -342,13 +360,13 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
 // Keyboardio Model 01.
 
 
-static kaleidoscope::LEDSolidColor solidRed(160, 0, 0);
-static kaleidoscope::LEDSolidColor solidOrange(140, 70, 0);
-static kaleidoscope::LEDSolidColor solidYellow(130, 100, 0);
-static kaleidoscope::LEDSolidColor solidGreen(0, 160, 0);
-static kaleidoscope::LEDSolidColor solidBlue(0, 70, 130);
-static kaleidoscope::LEDSolidColor solidIndigo(0, 0, 170);
-static kaleidoscope::LEDSolidColor solidViolet(130, 0, 120);
+// static kaleidoscope::LEDSolidColor solidRed(160, 0, 0);
+// static kaleidoscope::LEDSolidColor solidOrange(140, 70, 0);
+// static kaleidoscope::LEDSolidColor solidYellow(130, 100, 0);
+// static kaleidoscope::LEDSolidColor solidGreen(0, 160, 0);
+// static kaleidoscope::LEDSolidColor solidBlue(0, 70, 130);
+// static kaleidoscope::LEDSolidColor solidIndigo(0, 0, 170);
+// static kaleidoscope::LEDSolidColor solidViolet(130, 0, 120);
 
 /** toggleLedsOnSuspendResume toggles the LEDs off when the host goes to sleep,
  * and turns them back on when it wakes up.
@@ -423,6 +441,10 @@ USE_MAGIC_COMBOS({.action = toggleKeyboardProtocol,
 // The order can be important. For example, LED effects are
 // added in the order they're listed here.
 KALEIDOSCOPE_INIT_PLUGINS(
+  // Its recommended that Qukeys is the first plugin so it can be
+  // assured to take over
+  Qukeys,
+
   // The EEPROMSettings & EEPROMKeymap plugins make it possible to have an
   // editable keymap in EEPROM.
   EEPROMSettings,
@@ -455,7 +477,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // The hardware test mode, which can be invoked by tapping Prog, LED and the
   // left Fn button at the same time.
-  TestMode,
+  // TestMode,
 
   // LEDControl provides support for other LED modes
   //LEDControl, // added above
@@ -486,7 +508,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   //AlphaSquareEffect,
 
   // The stalker effect lights up the keys you've pressed recently
-  StalkerEffect,
+  // StalkerEffect,
 
   // The numpad plugin is responsible for lighting up the 'numpad' mode
   // with a custom LED effect
@@ -518,8 +540,13 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
   // tap dance keys
   TapDance,
-  Qukeys
+
+  PrefixLayer
 );
+
+
+static const kaleidoscope::plugin::PrefixLayer::dict_t prefixlayerdict[] PROGMEM =
+  PREFIX_DICT({DELETION, PREFIX_SEQ(LALT(LGUI(Key_D)))});
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up
@@ -560,6 +587,8 @@ void setup() {
   // by using the `settings.defaultLayer` Focus command.
   EEPROMKeymap.setup(5, EEPROMKeymap.Mode::EXTEND);
 
+  // Installs the prefix layers
+  PrefixLayer.dict = prefixlayerdict;
 }
 
 /** loop is the second of the standard Arduino sketch functions.
