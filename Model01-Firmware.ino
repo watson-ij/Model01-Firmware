@@ -75,6 +75,9 @@
 
 #include "Kaleidoscope-TapDance.h"
 
+// QuKeys for doing a different action on key being held
+#include "Kaleidoscope-Qukeys.h"
+
 /** This 'enum' is a list of all the macros used by the Model 01's firmware
   * The names aren't particularly important. What is important is that each
   * is unique.
@@ -92,7 +95,10 @@ enum { MACRO_VERSION_INFO,
        MACRO_CU,
        MACRO_MX,
        MACRO_CX,
-       MACRO_CC
+       MACRO_CC,
+       MACRO_BOL,
+       MACRO_EOL,
+       MACRO_ACE
      };
 
 
@@ -230,8 +236,8 @@ KEYMAPS(
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
    Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
-                               Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  ___,              ___,
-   Key_PcApplication,          Consumer_Mute,          Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
+                               Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  M(MACRO_ACE),     ___,
+   ___,                        M(MACRO_BOL),           Key_PageDown,             Key_PageUp,               M(MACRO_EOL),    Key_Backslash,    Key_Pipe,
    ___, ___, Key_Enter, ___,
    ___)
 ) // KEYMAPS(
@@ -311,6 +317,20 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
     Macros.play(MACRODOWN(D(LeftControl), T(C), U(LeftControl)));
     break;
 
+  case MACRO_EOL:
+    // macrodown only sends one command even if held down.
+    Macros.play(MACRODOWN(D(LeftControl), T(E), U(LeftControl)));
+    break;
+
+  case MACRO_BOL:
+    // macrodown only sends one command even if held down.
+    Macros.play(MACRODOWN(D(LeftControl), T(A), U(LeftControl)));
+    break;
+    
+  case MACRO_ACE:
+    // macrodown only sends one command even if held down.
+    Macros.play(MACRODOWN(T(F13)));
+    break;
   }
   return MACRO_NONE;
 }
@@ -431,7 +451,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   ActiveModColorEffect,
 
   // The boot greeting effect pulses the LED button for 10 seconds after the keyboard is first connected
-  BootGreetingEffect,
+  //BootGreetingEffect,
 
   // The hardware test mode, which can be invoked by tapping Prog, LED and the
   // left Fn button at the same time.
@@ -485,7 +505,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   // The MagicCombo plugin lets you use key combinations to trigger custom
   // actions - a bit like Macros, but triggered by pressing multiple keys at the
   // same time.
-  MagicCombo,
+  //MagicCombo,
 
   // The USBQuirks plugin lets you do some things with USB that we aren't
   // comfortable - or able - to do automatically, but can be useful
@@ -497,7 +517,8 @@ KALEIDOSCOPE_INIT_PLUGINS(
   OneShot,
 
   // tap dance keys
-  TapDance
+  TapDance,
+  Qukeys
 );
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
@@ -513,7 +534,7 @@ void setup() {
   NumPad.numPadLayer = NUMPAD;
 
   // We configure the AlphaSquare effect to use RED letters
-  AlphaSquare.color = CRGB(255, 0, 0);
+  //AlphaSquare.color = CRGB(255, 0, 0);
 
   // We set the brightness of the rainbow effects to 150 (on a scale of 0-255)
   // This draws more than 500mA, but looks much nicer than a dimmer effect
@@ -523,7 +544,7 @@ void setup() {
   // The LED Stalker mode has a few effects. The one we like is called
   // 'BlazingTrail'. For details on other options, see
   // https://github.com/keyboardio/Kaleidoscope/blob/master/doc/plugin/LED-Stalker.md
-  StalkerEffect.variant = STALKER(BlazingTrail);
+  //StalkerEffect.variant = STALKER(BlazingTrail);
 
   // We want to make sure that the firmware starts with LED effects off
   // This avoids over-taxing devices that don't have a lot of power to share
