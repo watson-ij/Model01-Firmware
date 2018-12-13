@@ -154,7 +154,7 @@ enum { MACRO_VERSION_INFO,
   *
   */
 
-enum { PRIMARY, NUMPAD, FUNCTION1, FUNCTION2, DELETION }; // layers
+enum { PRIMARY, NUMPAD, FUNCTION1, FUNCTION2, DELETION, WHITESPACE }; // layers
 
 
 /**
@@ -196,7 +196,7 @@ KEYMAPS(
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
    M(MACRO_MX),  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   OSM(RightShift), Key_Enter, Key_Spacebar, OSM(LeftAlt),
+   OSM(RightShift), Key_Enter, LT(WHITESPACE, Spacebar), OSM(LeftAlt),
    ShiftToLayer(FUNCTION2)),
 
   [NUMPAD] =  KEYMAP_STACKED
@@ -245,6 +245,22 @@ KEYMAPS(
    ___),
 
   [DELETION] =  KEYMAP_STACKED
+  (___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___,
+   ___,
+
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+        ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___, ___, ___, ___,
+   ___, ___, ___, ___,
+   ___),
+
+  
+  [WHITESPACE] =  KEYMAP_STACKED
   (___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
         ___, ___, ___, ___, ___, ___,
@@ -546,7 +562,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
 
 
 static const kaleidoscope::plugin::PrefixLayer::dict_t prefixlayerdict[] PROGMEM =
-  PREFIX_DICT({DELETION, PREFIX_SEQ(LALT(LGUI(Key_D)))});
+  PREFIX_DICT({DELETION, PREFIX_SEQ(LALT(LGUI(Key_D)))}, {WHITESPACE, PREFIX_SEQ(LALT(LGUI(Key_W)))});
 
 /** The 'setup' function is one of the two standard Arduino sketch functions.
  * It's called when your keyboard first powers up. This is where you set up

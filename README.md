@@ -1,10 +1,17 @@
 # Ian's version of the Firmware
 
-Requires
+Requires:
+
 - https://github.com/jamesnvc/Kaleidoscope-PrefixLayer.git
 
 Interesting for emacs integration:
+
 - https://github.com/algernon/kaleidoscope.el.git
+
+Current Issues
+
+- Added a prefix layer to handle various deletion keys, but prefix
+  layer only works with tapping not being held down
 
 The regular keyboardio README continues below...
 
