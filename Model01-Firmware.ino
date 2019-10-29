@@ -94,11 +94,16 @@
   * a macro key is pressed.
   */
 
+/* Leave these in for now, the macro versions can be made to only send
+   the key once, whereas the straight version can't do this. Try it
+   and see if its needed */
+
 enum { MACRO_VERSION_INFO,
        MACRO_CU,
        MACRO_MX,
        MACRO_CX,
        MACRO_CC,
+       MACRO_CG,
        MACRO_BOL,
        MACRO_EOL,
        MACRO_ACE
@@ -182,25 +187,28 @@ enum { PRIMARY, NUMPAD, FUNCTION1, FUNCTION2, DELETION, WHITESPACE }; // layers
  */
 // *INDENT-OFF*
 
+#define Key_LeftAngleBracket LSHIFT(Key_Comma)
+#define Key_RightAngleBracket LSHIFT(Key_Period)
+
 KEYMAPS(
 
   [PRIMARY] = KEYMAP_STACKED
-  (___,          Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
+  (LockLayer(NUMPAD),  Key_1, Key_2, Key_3, Key_4, Key_5, Key_LEDEffectNext,
    Key_Backtick, Key_Q, Key_W, Key_E, Key_R, Key_T, Key_Tab,
    Key_Tab,   Key_A, Key_S, Key_D, Key_F, Key_G,
-   M(MACRO_CC), Key_Z, Key_X, Key_C, Key_V, Key_B, Key_Escape,
-   OSM(LeftShift), LT(DELETION, Backspace), OSM(LeftControl), OSM(LeftGui),
-   M(MACRO_CX),
+   LCTRL(Key_C), Key_Z, Key_X, Key_C, Key_V, Key_B, LCTRL(Key_G),
+   OSM(LeftShift), LT(WHITESPACE, Spacebar), OSM(LeftControl), OSM(LeftGui),
+   LCTRL(Key_X),
 
-   M(MACRO_CU),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
+   LCTRL(Key_U),  Key_6, Key_7, Key_8,     Key_9,         Key_0,         LockLayer(NUMPAD),
    Key_Enter,     Key_Y, Key_U, Key_I,     Key_O,         Key_P,         Key_Equals,
                   Key_H, Key_J, Key_K,     Key_L,         Key_Semicolon, Key_Quote,
-   M(MACRO_MX),  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
-   OSM(RightShift), Key_Enter, LT(WHITESPACE, Spacebar), OSM(LeftAlt),
-   ShiftToLayer(FUNCTION2)),
+   LALT(Key_X),  Key_N, Key_M, Key_Comma, Key_Period,    Key_Slash,     Key_Minus,
+   OSM(RightShift), Key_Enter, LT(DELETION, Backspace), OSM(LeftAlt),
+   LCTRL(Key_C)),
 
   [NUMPAD] =  KEYMAP_STACKED
-  (___, ___, ___, ___, ___, ___, ___,
+  (___, Consumer_Mute, Consumer_VolumeDecrement, Consumer_VolumeIncrement, Key_BacklightDown, Key_BacklightUp, ___,
    ___, ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___,
    ___, ___, ___, ___, ___, ___, ___,
@@ -217,15 +225,15 @@ KEYMAPS(
   [FUNCTION1] =  KEYMAP_STACKED
   (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
    Key_Tab,  ___,              Key_mouseUp, ___,        Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_Home, Key_mouseL,       Key_mouseDn, Key_mouseR, Key_mouseBtnL, Key_mouseWarpNW,
-   Key_End,  Key_PrintScreen,  Key_Insert,  ___,        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
+   Key_Home, Key_LeftCurlyBracket, Key_RightCurlyBracket, Key_LeftParen, Key_RightParen, Key_Pipe,
+   Key_End,  Key_LeftAngleBracket, Key_RightAngleBracket, Key_LeftBracket, Key_RightBracket, Key_Backslash,  Key_mouseWarpSE,
    ___, Key_Delete, ___, ___,
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
    Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
                                Key_LeftArrow,          Key_DownArrow,            Key_UpArrow,              Key_RightArrow,  ___,              ___,
-   Key_PcApplication,          Consumer_Mute,          Consumer_VolumeDecrement, Consumer_VolumeIncrement, ___,             Key_Backslash,    Key_Pipe,
+   Key_PcApplication,          ___,         ___, ___, ___,             Key_Backslash,    Key_Pipe,
    ___, ___, Key_Enter, ___,
    ___),
 
@@ -233,15 +241,15 @@ KEYMAPS(
   (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
    Key_Tab,  Key_mouseL,       Key_mouseUp, Key_mouseR, Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
    Key_Home, Key_mouseBtnL,    Key_mouseDn, TD(0),      TD(1),         Key_mouseWarpNW,
-   Key_End,  Key_PrintScreen,  Key_Insert,  ___,        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
-   ___, Key_Delete, ___, ___,
+   Key_End,  Key_PrintScreen,  LALT(Key_Prior),  LCTRL(LALT(Key_V)),        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
+   ___, Key_Enter, ___, ___,
    ___,
 
    Consumer_ScanPreviousTrack, Key_F6,                 Key_F7,                   Key_F8,                   Key_F9,          Key_F10,          Key_F11,
-   Consumer_PlaySlashPause,    Consumer_ScanNextTrack, Key_LeftCurlyBracket,     Key_RightCurlyBracket,    Key_LeftBracket, Key_RightBracket, Key_F12,
-                               M(MACRO_ACE),           Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,      ___,
-   ___,                        Key_Backslash,          M(MACRO_BOL),             Key_PageDown,             Key_PageUp,      M(MACRO_EOL),    Key_Pipe,
-   ___, ___, Key_Enter, ___,
+   ___, LCTRL(Key_Y), LCTRL(Key_LeftArrow),            LCTRL(Key_DownArrow),            LCTRL(Key_UpArrow),     LCTRL(Key_RightArrow), M(MACRO_ACE),
+   LCTRL(Key_W),           Key_LeftArrow,            Key_DownArrow,            Key_UpArrow,     Key_RightArrow,     LCTRL(Key_S),
+   ___,                        LCTRL(Key_Equals),          M(MACRO_BOL),             Key_PageDown,             Key_PageUp,      M(MACRO_EOL),    Key_Pipe,
+   ___, ___, Key_Delete, ___,
    ___),
 
   [DELETION] =  KEYMAP_STACKED
@@ -349,6 +357,11 @@ const macro_t *macroAction(uint8_t macroIndex, uint8_t keyState) {
   case MACRO_CC:
     // macrodown only sends one command even if held down.
     Macros.play(MACRODOWN(D(LeftControl), T(C), U(LeftControl)));
+    break;
+
+  case MACRO_CG:
+    // macrodown only sends one command even if held down.
+    Macros.play(MACRODOWN(D(LeftControl), T(G), U(LeftControl)));
     break;
 
   case MACRO_EOL:
@@ -571,6 +584,10 @@ static const kaleidoscope::plugin::PrefixLayer::dict_t prefixlayerdict[] PROGMEM
 void setup() {
   // First, call Kaleidoscope's internal setup function
   Kaleidoscope.setup();
+
+  // Special Qukey
+  QUKEYS(kaleidoscope::Qukey(PRIMARY, 3, 6, ShiftToLayer(FUNCTION1)),
+	 kaleidoscope::Qukey(PRIMARY, 3, 9, ShiftToLayer(FUNCTION2)));
 
   // While we hope to improve this in the future, the NumPad plugin
   // needs to be explicitly told which keymap layer is your numpad layer
