@@ -73,7 +73,7 @@
 
 #include "Kaleidoscope-OneShot.h"
 
-#include "Kaleidoscope-TapDance.h"
+//#include "Kaleidoscope-TapDance.h"
 
 // QuKeys for doing a different action on key being held
 #include "Kaleidoscope-Qukeys.h"
@@ -240,7 +240,7 @@ KEYMAPS(
   [FUNCTION2] =  KEYMAP_STACKED
   (___,      Key_F1,           Key_F2,      Key_F3,     Key_F4,        Key_F5,           Key_CapsLock,
    Key_Tab,  Key_mouseL,       Key_mouseUp, Key_mouseR, Key_mouseBtnR, Key_mouseWarpEnd, Key_mouseWarpNE,
-   Key_Home, Key_mouseBtnL,    Key_mouseDn, TD(0),      TD(1),         Key_mouseWarpNW,
+   Key_Home, Key_mouseBtnL,    Key_mouseDn, Key_LeftParen,      Key_RightParen,         Key_mouseWarpNW,
    Key_End,  Key_PrintScreen,  LALT(Key_Prior),  LCTRL(LALT(Key_V)),        Key_mouseBtnM, Key_mouseWarpSW,  Key_mouseWarpSE,
    ___, Key_Enter, ___, ___,
    ___,
@@ -307,17 +307,17 @@ static void versionInfoMacro(uint8_t keyState) {
  *
  */
 
-static void anyKeyMacro(uint8_t keyState) {
-  static Key lastKey;
-  bool toggledOn = false;
-  if (keyToggledOn(keyState)) {
-    lastKey.keyCode = Key_A.keyCode + (uint8_t)(millis() % 36);
-    toggledOn = true;
-  }
+// static void anyKeyMacro(uint8_t keyState) {
+//   static Key lastKey;
+//   bool toggledOn = false;
+//   if (keyToggledOn(keyState)) {
+//     lastKey.keyCode = Key_A.keyCode + (uint8_t)(millis() % 36);
+//     toggledOn = true;
+//   }
 
-  if (keyIsPressed(keyState))
-    kaleidoscope::hid::pressKey(lastKey, toggledOn);
-}
+//   if (keyIsPressed(keyState))
+//     kaleidoscope::hid::pressKey(lastKey, toggledOn);
+// }
 
 
 /** macroAction dispatches keymap events that are tied to a macro
@@ -445,17 +445,17 @@ static void toggleKeyboardProtocol(uint8_t combo_index) {
   USBQuirks.toggleKeyboardProtocol();
 }
 
-void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
-		    kaleidoscope::TapDance::ActionType tap_dance_action) {
-  switch (tap_dance_index) {
-  case 0:
-    return tapDanceActionKeys(tap_count, tap_dance_action,
-			      Key_LeftParen, Key_LeftCurlyBracket, Key_LeftBracket);
-  case 1:
-    return tapDanceActionKeys(tap_count, tap_dance_action,
-			      Key_RightParen, Key_RightCurlyBracket, Key_RightBracket);
-  }
-}
+// void tapDanceAction(uint8_t tap_dance_index, byte row, byte col, uint8_t tap_count,
+// 		    kaleidoscope::TapDance::ActionType tap_dance_action) {
+//   switch (tap_dance_index) {
+//   case 0:
+//     return tapDanceActionKeys(tap_count, tap_dance_action,
+// 			      Key_LeftParen, Key_LeftCurlyBracket, Key_LeftBracket);
+//   case 1:
+//     return tapDanceActionKeys(tap_count, tap_dance_action,
+// 			      Key_RightParen, Key_RightCurlyBracket, Key_RightBracket);
+//   }
+// }
 
 
 /** Magic combo list, a list of key combo and action pairs the firmware should
@@ -568,7 +568,7 @@ KALEIDOSCOPE_INIT_PLUGINS(
   OneShot,
 
   // tap dance keys
-  TapDance,
+  //TapDance,
 
   PrefixLayer
 );
@@ -586,8 +586,8 @@ void setup() {
   Kaleidoscope.setup();
 
   // Special Qukey
-  QUKEYS(kaleidoscope::Qukey(PRIMARY, 3, 6, ShiftToLayer(FUNCTION1)),
-	 kaleidoscope::Qukey(PRIMARY, 3, 9, ShiftToLayer(FUNCTION2)));
+  QUKEYS(kaleidoscope::plugin::Qukey(PRIMARY, KeyAddr(3, 6), ShiftToLayer(FUNCTION1)),
+	 kaleidoscope::plugin::Qukey(PRIMARY, KeyAddr(3, 9), ShiftToLayer(FUNCTION2)));
 
   // While we hope to improve this in the future, the NumPad plugin
   // needs to be explicitly told which keymap layer is your numpad layer
@@ -618,7 +618,7 @@ void setup() {
   // additional layers in EEPROM. For now, we reserve space for five layers. If
   // one wants to use these layers, just set the default layer to one in EEPROM,
   // by using the `settings.defaultLayer` Focus command.
-  EEPROMKeymap.setup(5, EEPROMKeymap.Mode::EXTEND);
+  EEPROMKeymap.setup(5);
 
   // Installs the prefix layers
   PrefixLayer.dict = prefixlayerdict;
